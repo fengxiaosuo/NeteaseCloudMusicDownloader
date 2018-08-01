@@ -1,26 +1,25 @@
 # NeteaseCloudMusicDownloader
-根据网易云音乐 playlist 下载音乐到本地，并重命名成 `<Artist> - <title>.mp3` 的格式
-## 目录
-  <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+# 目录
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
-  - [NeteaseCloudMusicDownloader](#neteasecloudmusicdownloader)
-  	- [目录](#目录)
-  	- [依赖](#依赖)
-  - [netease_rename.py 网易云音乐缓存重命名](#neteaserenamepy-网易云音乐缓存重命名)
-  	- [功能](#功能)
-  	- [使用说明示例](#使用说明示例)
-  	- [参数](#参数)
-  - [netease_download_playlist.py 网易云音乐下载播放列表](#neteasedownloadplaylistpy-网易云音乐下载播放列表)
-  	- [功能](#功能)
-  	- [使用说明示例](#使用说明示例)
-  	- [参数](#参数)
-  - [netease_refresh_by_playlist.py 根据播放列表更新本地文件](#neteaserefreshbyplaylistpy-根据播放列表更新本地文件)
-  	- [功能](#功能)
-  	- [使用说明示例](#使用说明示例)
-  	- [参数](#参数)
+- [NeteaseCloudMusicDownloader](#neteasecloudmusicdownloader)
+- [目录](#目录)
+- [依赖](#依赖)
+- [netease_rename.py 网易云音乐缓存重命名](#neteaserenamepy-网易云音乐缓存重命名)
+	- [功能](#功能)
+	- [使用说明示例](#使用说明示例)
+	- [参数](#参数)
+- [netease_download_playlist.py 网易云音乐下载播放列表](#neteasedownloadplaylistpy-网易云音乐下载播放列表)
+	- [功能](#功能)
+	- [使用说明示例](#使用说明示例)
+	- [参数](#参数)
+- [netease_refresh_by_playlist.py 根据播放列表更新本地文件](#neteaserefreshbyplaylistpy-根据播放列表更新本地文件)
+	- [功能](#功能)
+	- [使用说明示例](#使用说明示例)
+	- [参数](#参数)
 
-  <!-- /TOC -->
-## 依赖
+<!-- /TOC -->
+# 依赖
   - **eyed3** mp3 文件属性赋值，如 title / artist / album / album_artist
     ```shell
     $ pip install eyed3
