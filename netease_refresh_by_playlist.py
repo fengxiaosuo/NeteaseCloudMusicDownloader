@@ -7,9 +7,7 @@ import netease_rename
 import netease_download_playlist
 
 
-def netease_refresh_by_playlist(
-    source_path, dist_path, playlist_id, WITH_SIZE_CHECK=False
-):
+def netease_refresh_by_playlist(source_path, dist_path, playlist_id, WITH_SIZE_CHECK=False):
     if not os.path.exists(dist_path):
         os.mkdir(dist_path)
 
@@ -36,21 +34,14 @@ def netease_refresh_by_playlist(
                 "Dowload from netease, song_id = %s, title = %s, artist = %s"
                 % (song_id, song_info["title"], song_info["artist"])
             )
-            temp_file_path = netease_download_playlist.netease_download_single_bit_rate(
-                song_id, dist_path, WITH_RENAME=False
-            )
+            temp_file_path = netease_download_playlist.netease_download_single_bit_rate(song_id, dist_path, WITH_RENAME=False)
             new_downloaded.append(song_id)
 
-            if (
-                temp_file_path != None
-                and os.path.exists(source_path_file)
-                and WITH_SIZE_CHECK == True
-            ):
+            if temp_file_path != None and os.path.exists(source_path_file) and WITH_SIZE_CHECK == True:
                 source_size = os.path.getsize(source_path_file)
                 downloaded_size = os.path.getsize(temp_file_path)
                 print(
-                    "source_size = %.2fM, downloaded_size = %.2fM"
-                    % (source_size / 1024 / 1024, downloaded_size / 1024 / 1024)
+                    "source_size = %.2fM, downloaded_size = %.2fM" % (source_size / 1024 / 1024, downloaded_size / 1024 / 1024)
                 )
                 if downloaded_size - source_size >= 500000:
                     print(">>>> Downloaded size is 500K bigger than source one")
@@ -63,14 +54,9 @@ def netease_refresh_by_playlist(
                 temp_file_path = source_path_file
 
         if temp_file_path == None:
-            print(
-                "Song not found, song_id = %s, title = %s, artist = %s"
-                % (song_id, song_info["title"], song_info["artist"])
-            )
+            print("Song not found, song_id = %s, title = %s, artist = %s" % (song_id, song_info["title"], song_info["artist"]))
         else:
-            dist_path_file = netease_rename.netease_cache_rename_single(
-                song_id, temp_file_path, dist_path, KEEP_SOURCE=False
-            )
+            dist_path_file = netease_rename.netease_cache_rename_single(song_id, temp_file_path, dist_path, KEEP_SOURCE=False)
             print("Move %s to %s" % (temp_file_path, dist_path_file))
 
         print()
@@ -102,34 +88,14 @@ def parse_arguments(argv):
             "default playlist id: %s" % (default_dist_path, default_playlist_id)
         ),
     )
-    parser.add_argument(
-        "source_path", type=str, help="Source folder contains music files"
-    )
-    parser.add_argument(
-        "-p",
-        "--playlist",
-        type=str,
-        help="Playlist id used to download",
-        default=default_playlist_id,
-    )
-    parser.add_argument(
-        "-d",
-        "--dist_path",
-        type=str,
-        help="Dist output path",
-        default=default_dist_path,
-    )
-    parser.add_argument(
-        "--with_size_check",
-        action="store_true",
-        help="Enbale comparing source and downloaded file size",
-    )
+    parser.add_argument("source_path", type=str, help="Source folder contains music files")
+    parser.add_argument("-p", "--playlist", type=str, help="Playlist id used to download", default=default_playlist_id)
+    parser.add_argument("-d", "--dist_path", type=str, help="Dist output path", default=default_dist_path)
+    parser.add_argument("--with_size_check", action="store_true", help="Enbale comparing source and downloaded file size")
 
     return parser.parse_args(argv)
 
 
 if __name__ == "__main__":
     args = parse_arguments(sys.argv[1:])
-    netease_refresh_by_playlist(
-        args.source_path, args.dist_path, args.playlist, args.with_size_check
-    )
+    netease_refresh_by_playlist(args.source_path, args.dist_path, args.playlist, args.with_size_check)

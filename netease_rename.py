@@ -47,9 +47,7 @@ import shutil
 
 
 def detect_netease_music_name(song_id):
-    headers = {
-        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0"
-    }
+    headers = {"User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0"}
     url_base = "http://music.163.com/api/song/detail/?id={}&ids=[{}]"
 
     url_target = url_base.format(song_id, song_id)
@@ -73,25 +71,12 @@ def detect_netease_music_name_list(song_list):
 
 
 def generate_target_file_name(dist_path, title, artist, song_format="mp3"):
-    dist_name = (
-        os.path.join(
-            dist_path, "%s - %s" % (artist.replace("/", " "), title.replace("/", " "))
-        )
-        + "."
-        + song_format
-    )
+    dist_name = os.path.join(dist_path, "%s - %s" % (artist.replace("/", " "), title.replace("/", " "))) + "." + song_format
 
     return dist_name
 
 
-def netease_cache_rename_single(
-    song_id,
-    file_path,
-    dist_path,
-    KEEP_SOURCE=True,
-    song_format="mp3",
-    SAVE_COVER_IAMGE=True,
-):
+def netease_cache_rename_single(song_id, file_path, dist_path, KEEP_SOURCE=True, song_format="mp3", SAVE_COVER_IAMGE=True):
     if not os.path.exists(dist_path):
         os.mkdir(dist_path)
 
@@ -112,9 +97,7 @@ def netease_cache_rename_single(
         tt.tag.images.set(3, resp.content, "image/jpeg", "album cover")
     tt.tag.save(encoding="utf8")
 
-    dist_name = generate_target_file_name(
-        dist_path, tt.tag.title, tt.tag.artist, song_format
-    )
+    dist_name = generate_target_file_name(dist_path, tt.tag.title, tt.tag.artist, song_format)
 
     if KEEP_SOURCE == True:
         shutil.copyfile(file_path, dist_name)
@@ -129,23 +112,16 @@ def netease_cache_rename(source_path, dist_path, KEEP_SOURCE=True):
         if not file_name.endswith(".mp3"):
             continue
         if not len(file_name.split("-")) == 3:
-            print(
-                ">>>> File %s not in format <song id>-<bite rate>-<random number>.mp3"
-                % (file_name)
-            )
+            print(">>>> File %s not in format <song id>-<bite rate>-<random number>.mp3" % (file_name))
             continue
 
         song_id = file_name.split("-")[0]
-        netease_cache_rename_single(
-            song_id, os.path.join(source_path, file_name), dist_path, KEEP_SOURCE
-        )
+        netease_cache_rename_single(song_id, os.path.join(source_path, file_name), dist_path, KEEP_SOURCE)
 
 
 def parse_arguments(argv):
     HOME_DIR = os.getenv("HOME")
-    default_source_path = os.path.join(
-        HOME_DIR, ".cache/netease-cloud-music/CachedSongs"
-    )
+    default_source_path = os.path.join(HOME_DIR, ".cache/netease-cloud-music/CachedSongs")
     default_dist_path = "./output_music"
 
     parser = argparse.ArgumentParser(
@@ -159,25 +135,10 @@ def parse_arguments(argv):
             "default dist path: %s" % (default_source_path, default_dist_path)
         ),
     )
+    parser.add_argument("-d", "--dist_path", type=str, help="Music output path", default=default_dist_path)
+    parser.add_argument("-s", "--source_path", type=str, help="Music source path", default=default_source_path)
     parser.add_argument(
-        "-d",
-        "--dist_path",
-        type=str,
-        help="Music output path",
-        default=default_dist_path,
-    )
-    parser.add_argument(
-        "-s",
-        "--source_path",
-        type=str,
-        help="Music source path",
-        default=default_source_path,
-    )
-    parser.add_argument(
-        "-r",
-        "--remove_source",
-        action="store_true",
-        help="Remove source files, default using cp instead of mv",
+        "-r", "--remove_source", action="store_true", help="Remove source files, default using cp instead of mv"
     )
 
     args = parser.parse_args(argv)
