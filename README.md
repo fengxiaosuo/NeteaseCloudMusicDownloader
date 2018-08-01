@@ -101,7 +101,7 @@
     # Baidu flac url
     "http://music.baidu.com/data/music/fmlink?songIds={song id}&type=flac"
     ```
-  - 支持指定 <song id list> 下载，如果指定了，则优先级高于 playlist
+  - 支持指定 `<song id list>` 下载，如果指定了，则优先级高于 playlist
 ## 使用说明示例
   - **开始下载**
     ```shell
@@ -149,7 +149,7 @@
   - `--outer` 指定使用 outer url 方式下载
   - `--bitrate` 指定使用 bitrate url 方式下载，可以指定 bitrate=320k，默认方式
   - `--baidu_flac` 指定使用 Baidu flac 方式下载，可以下载 flac 格式的无损音乐，出错率高
-  - `--song_id_list [SONG_ID_LIST [SONG_ID_LIST ...]]` 指定一个 <song id list> 下载，而不使用 playlist，格式可以是 `1 2 3` 或 `1, 2, 3`
+  - `--song_id_list [SONG_ID_LIST [SONG_ID_LIST ...]]` 指定一个 song id list 下载，而不使用 playlist，格式可以是 `1 2 3` 或 `1, 2, 3`
   - 示例
     ```shell
     # 帮助信息
@@ -167,13 +167,13 @@
 
 # netease refresh by playlist 根据播放列表更新本地文件
 ## 功能
-  - 根据播放列表 <playlist> 更新本地文件 <source_path>，并将文件移动到 <dist_path>
+  - 根据播放列表 `<playlist>` 更新本地文件 `<source_path>`，并将文件移动到 `<dist_path>`
     - 检查播放列表中的音乐文件
-    - 如果 <dist_path> 中存在该文件，保留
-    - 如果 <source_path> 中存在该文件，移动到 <dist_path>
-    - 如果本地都不存在，从 Netease 下载并移动到 <dist_path>
+    - 如果 `<dist_path>` 中存在该文件，保留
+    - 如果 `<source_path>` 中存在该文件，移动到 `<dist_path>`
+    - 如果本地都不存在，从 Netease 下载并移动到 `<dist_path>`
   - 所有文件都会更新 ID3 信息，并重新下载专辑封面图片
-  - 选项 <--with_size_check> 指定对比文件大小，如果下载的文件大小大于本地文件 500K，则保留下载的文件
+  - 选项 `<--with_size_check>` 指定对比文件大小，如果下载的文件大小大于本地文件 **500K**，则保留下载的文件
 ## 使用说明示例
   - **开始更新**
     ```shell
