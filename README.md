@@ -5,15 +5,15 @@
 - [NeteaseCloudMusicDownloader](#neteasecloudmusicdownloader)
 - [目录](#目录)
 - [依赖](#依赖)
-- [netease_rename.py 网易云音乐缓存重命名](#neteaserenamepy-网易云音乐缓存重命名)
+- [netease_rename 网易云音乐缓存重命名](#neteaserename-网易云音乐缓存重命名)
 	- [功能](#功能)
 	- [使用说明示例](#使用说明示例)
 	- [参数](#参数)
-- [netease_download_playlist.py 网易云音乐下载播放列表](#neteasedownloadplaylistpy-网易云音乐下载播放列表)
+- [netease_download_playlist 网易云音乐下载播放列表](#neteasedownloadplaylist-网易云音乐下载播放列表)
 	- [功能](#功能)
 	- [使用说明示例](#使用说明示例)
 	- [参数](#参数)
-- [netease_refresh_by_playlist.py 根据播放列表更新本地文件](#neteaserefreshbyplaylistpy-根据播放列表更新本地文件)
+- [netease_refresh_by_playlist 根据播放列表更新本地文件](#neteaserefreshbyplaylist-根据播放列表更新本地文件)
 	- [功能](#功能)
 	- [使用说明示例](#使用说明示例)
 	- [参数](#参数)
@@ -38,7 +38,7 @@
     ```
 ***
 
-# netease_rename.py 网易云音乐缓存重命名
+# netease_rename 网易云音乐缓存重命名
 ## 功能
   - 重命名 mp3 文件，查找 song id 对应的 `歌手名` 与 `歌曲名`，并将文件重命名为 `歌手名 - 歌曲名.mp3`
     ```md
@@ -87,7 +87,7 @@
     ```
 ***
 
-# netease_download_playlist.py 网易云音乐下载播放列表
+# netease_download_playlist 网易云音乐下载播放列表
 ## 功能
   - 根据 playlist 下载音乐文件到本地，如果本地指定的文件夹中存在同名文件则跳过
   - 支持三种不同的下载方式
@@ -163,7 +163,7 @@
     ```
 ***
 
-# netease_refresh_by_playlist.py 根据播放列表更新本地文件
+# netease_refresh_by_playlist 根据播放列表更新本地文件
 ## 功能
   - 根据播放列表 <playlist> 更新本地文件 <source_path>，并将文件移动到 <dist_path>
     - 检查播放列表中的音乐文件
