@@ -19,11 +19,16 @@ headers = {
     'Cookie': 'appver=2.0.2'
 }
 song_download_url = 'http://music.163.com/weapi/song/enhance/player/url?csrf_token='
+song_id = 534568536
+bit_rate=320000
 params = {'ids': [song_id], 'br': bit_rate}
 
 import encrypt
 data = encrypt.encrypted_request(params)
-rr = requests.post(song_download_url, data=data, timeout=30, headers=headers)
+
+session = requests.session()
+session.headers.update(headers)
+rr = session.post(song_download_url, data=data, timeout=30, headers=headers)
 rr.json()
 """
 
@@ -83,8 +88,13 @@ def get_url_2_local_file(song_id, url, dist_path, WITH_RENAME=True, song_format=
     else:
         return temp_download_path
 
+def get_url_content_size(url):
+    to_download_size = len(requests.get(url, headers=headers).content)
+    print("To download size = %.2fM" % (to_download_size / 1024 / 1024))
+    return to_download_size
 
-def netease_download_single_bit_rate(song_id, dist_path, bit_rate=320000, WITH_RENAME=True):
+
+def netease_download_single_bit_rate(song_id, dist_path=None, bit_rate=320000, WITH_RENAME=True, SIZE_ONLY=False):
     # bit_rate: {'MD 128k': 128000, 'HD 320k': 320000}
     song_download_url = "http://music.163.com/weapi/song/enhance/player/url?csrf_token="
     # params = {'ids': [song_id], 'br': bit_rate}
@@ -94,20 +104,29 @@ def netease_download_single_bit_rate(song_id, dist_path, bit_rate=320000, WITH_R
     data = encrypt.encrypted_request(params)
     resp = requests.post(song_download_url, data=data, timeout=30, headers=headers)
     resp_json = resp.json()
-    download_url = resp_json["data"][0]["url"]
+    if resp_json['code'] == -460:
+        print(">>>> Return with cheating, maybe it is expired time limit, try again later")
+        exit(1)
 
+    download_url = resp_json["data"][0]["url"]
     if download_url == None:
         print(">>>> download_url is None, maybe it is limited by copyright. song_id = %s" % (song_id))
         return None
 
-    return get_url_2_local_file(song_id, download_url, dist_path, WITH_RENAME)
+    if SIZE_ONLY == True:
+        return get_url_content_size(download_url)
+    else:
+        return get_url_2_local_file(song_id, download_url, dist_path, WITH_RENAME)
 
 
-def netease_download_single_outer(song_id, dist_path, bit_rate=320000, WITH_RENAME=True):
+def netease_download_single_outer(song_id, dist_path=None, bit_rate=320000, WITH_RENAME=True, SIZE_ONLY=False):
     url_base = "http://music.163.com/song/media/outer/url?id={}.mp3"
     url = url_base.format(song_id)
 
-    return get_url_2_local_file(song_id, url, dist_path, WITH_RENAME)
+    if SIZE_ONLY == True:
+        return get_url_content_size(url)
+    else:
+        return get_url_2_local_file(song_id, url, dist_path, WITH_RENAME)
 
 
 def netease_songid_2_baidu_single(song_id, strict_level=0):

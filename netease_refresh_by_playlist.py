@@ -14,6 +14,7 @@ def netease_refresh_by_playlist(source_path, dist_path, playlist_id, WITH_SIZE_C
     playlist = netease_download_playlist.netease_parse_playlist_2_list(playlist_id)
 
     new_downloaded = []
+    song_not_found = []
     for song_id in playlist:
         song_info, _ = netease_rename.detect_netease_music_name(song_id)
         source_path_file = netease_rename.generate_target_file_name(
@@ -55,6 +56,8 @@ def netease_refresh_by_playlist(source_path, dist_path, playlist_id, WITH_SIZE_C
 
         if temp_file_path == None:
             print("Song not found, song_id = %s, title = %s, artist = %s" % (song_id, song_info["title"], song_info["artist"]))
+            new_downloaded.remove(song_id)
+            song_not_found.append(song_id)
         else:
             dist_path_file = netease_rename.netease_cache_rename_single(song_id, temp_file_path, dist_path, KEEP_SOURCE=False)
             print("Move %s to %s" % (temp_file_path, dist_path_file))
@@ -65,8 +68,12 @@ def netease_refresh_by_playlist(source_path, dist_path, playlist_id, WITH_SIZE_C
     for ss in netease_rename.detect_netease_music_name_list(new_downloaded):
         print("    %s: %s - %s" % (ss["song_id"], ss["artist"], ss["title"]))
     print()
-    print("New downloaded id: %s" % (new_downloaded))
-    return new_downloaded
+    print("Song not found, size = %d:" % len(song_not_found))
+    for ss in netease_rename.detect_netease_music_name_list(song_not_found):
+        print("    %s: %s - %s" % (ss["song_id"], ss["artist"], ss["title"]))
+    print()
+    print("Song not found id: %s" % (song_not_found))
+    return song_not_found
 
 
 def parse_arguments(argv):
