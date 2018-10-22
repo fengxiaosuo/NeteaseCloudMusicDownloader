@@ -88,6 +88,7 @@ def get_url_2_local_file(song_id, url, dist_path, WITH_RENAME=True, song_format=
     else:
         return temp_download_path
 
+
 def get_url_content_size(url):
     to_download_size = len(requests.get(url, headers=headers).content)
     print("To download size = %.2fM" % (to_download_size / 1024 / 1024))
@@ -257,8 +258,8 @@ def parse_arguments(argv):
     parser.add_argument("-d", "--dist_path", type=str, help="Download output path", default=default_dist_path)
     parser.add_argument("-p", "--playlist", type=str, help="Playlist id to download", default=default_playlist_id)
 
-    parser.add_argument("--outer", action="store_true", help="Downloading uses netease default output url")
-    parser.add_argument("--bitrate", action="store_true", help="Downloading with bitrate=320k from netease, DEFAULT one")
+    parser.add_argument("--outer", action="store_true", help="Downloading uses netease default output url, DEFAULT one")
+    parser.add_argument("--bitrate", action="store_true", help="Downloading with bitrate=320k from netease")
     parser.add_argument("--baidu_flac", action="store_true", help="Downloading with flac format from baidu")
 
     parser.add_argument(
@@ -276,10 +277,10 @@ def parse_arguments(argv):
 
     if args.baidu_flac == True:
         args.single_download_func = baidu_download_single_flac
-    elif args.outer == True:
-        args.single_download_func = netease_download_single_outer
-    else:
+    elif args.bitrate == True:
         args.single_download_func = netease_download_single_bit_rate
+    else:
+        args.single_download_func = netease_download_single_outer
 
     return args
 

@@ -7,7 +7,7 @@ import netease_rename
 import netease_download_playlist
 
 
-def netease_refresh_by_playlist(source_path, dist_path, playlist_id, WITH_SIZE_CHECK=False):
+def netease_refresh_by_playlist(source_path, dist_path, playlist_id, single_download_func, WITH_SIZE_CHECK=False):
     if not os.path.exists(dist_path):
         os.mkdir(dist_path)
 
@@ -35,7 +35,7 @@ def netease_refresh_by_playlist(source_path, dist_path, playlist_id, WITH_SIZE_C
                 "Dowload from netease, song_id = %s, title = %s, artist = %s"
                 % (song_id, song_info["title"], song_info["artist"])
             )
-            temp_file_path = netease_download_playlist.netease_download_single_bit_rate(song_id, dist_path, WITH_RENAME=False)
+            temp_file_path = single_download_func(song_id, dist_path, WITH_RENAME=False)
             new_downloaded.append(song_id)
 
             if temp_file_path != None and os.path.exists(source_path_file) and WITH_SIZE_CHECK == True:
@@ -99,10 +99,21 @@ def parse_arguments(argv):
     parser.add_argument("-p", "--playlist", type=str, help="Playlist id used to download", default=default_playlist_id)
     parser.add_argument("-d", "--dist_path", type=str, help="Dist output path", default=default_dist_path)
     parser.add_argument("--with_size_check", action="store_true", help="Enbale comparing source and downloaded file size")
+    parser.add_argument("--outer", action="store_true", help="Downloading uses netease default output url, DEFAULT one")
+    parser.add_argument("--bitrate", action="store_true", help="Downloading with bitrate=320k from netease")
+    parser.add_argument("--baidu_flac", action="store_true", help="Downloading with flac format from baidu")
 
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    if args.baidu_flac == True:
+        args.single_download_func = netease_download_playlist.baidu_download_single_flac
+    elif args.bitrate == True:
+        args.single_download_func = netease_download_playlist.netease_download_single_bit_rate
+    else:
+        args.single_download_func = netease_download_playlist.netease_download_single_outer
+
+    return args
 
 
 if __name__ == "__main__":
     args = parse_arguments(sys.argv[1:])
-    netease_refresh_by_playlist(args.source_path, args.dist_path, args.playlist, args.with_size_check)
+    netease_refresh_by_playlist(args.source_path, args.dist_path, args.playlist, args.single_download_func, args.with_size_check)

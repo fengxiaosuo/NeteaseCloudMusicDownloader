@@ -94,9 +94,9 @@
   - 根据 playlist 下载音乐文件到本地，如果本地指定的文件夹中存在同名文件则跳过
   - 支持三种不同的下载方式
     ```python
-    # outer url
+    # outer url，默认方式
     "http://music.163.com/song/media/outer/url?id={song id}.mp3"
-    # bitrate url，默认方式
+    # bitrate url
     "http://music.163.com/weapi/song/enhance/player/url?csrf_token=&ids={song id}&br={bit rate}"
     # Baidu flac url
     "http://music.baidu.com/data/music/fmlink?songIds={song id}&type=flac"
@@ -146,8 +146,8 @@
   - `-h, --help` 帮助信息
   - `-d DIST_PATH, --dist_path DIST_PATH` 下载的输出路径，默认 `./netease_download_music`
   - `-p PLAYLIST, --playlist PLAYLIST` 下载的播放列表，默认 `101562485`
-  - `--outer` 指定使用 outer url 方式下载
-  - `--bitrate` 指定使用 bitrate url 方式下载，可以指定 bitrate=320k，默认方式
+  - `--outer` 指定使用 outer url 方式下载，默认方式
+  - `--bitrate` 指定使用 bitrate url 方式下载，可以指定 bitrate=320k，容易检测为 cheating
   - `--baidu_flac` 指定使用 Baidu flac 方式下载，可以下载 flac 格式的无损音乐，出错率高
   - `--song_id_list [SONG_ID_LIST [SONG_ID_LIST ...]]` 指定一个 song id list 下载，而不使用 playlist，格式可以是 `1 2 3` 或 `1, 2, 3`
   - 示例
@@ -217,6 +217,9 @@
   - `-p PLAYLIST, --playlist PLAYLIST` 播放列表 ID，默认 `101562485`
   - `-d DIST_PATH, --dist_path DIST_PATH` 输出路径，默认 `./Netease_refreshed`
   - `--with_size_check` 指定对比文件大小，如果下载的文件大小大于本地文件 500K，则保留下载的文件
+  - `--outer` 指定使用 outer url 方式下载，默认方式
+  - `--bitrate` 指定使用 bitrate url 方式下载，可以指定 bitrate=320k，容易检测为 cheating
+  - `--baidu_flac` 指定使用 Baidu flac 方式下载，可以下载 flac 格式的无损音乐，出错率高
   - 示例
     ```shell
     ~/Downloads/netease/ -p 101562485 -d ~/Downloads/netease_refreshed
@@ -309,9 +312,48 @@
        [truncated]{"data":{"id":534568536,"url":"http://m8.music.126.net/20180807152631/e382b3cde7a3e1199debd4ce4a0105a1/ymusic/e90d/6ec2/4ce5/20c413f24f798d65deea22da9d371ccb.mp3","br":320000,"size":10603668,"md5":"20c413f24f798d65deea22da9d371
   ```
 ## Python test
+  ```py
+  import netease_rename
+  import netease_download_playlist
+
+  aa = netease_download_playlist.netease_parse_playlist_2_list(playlist_id=101562485)
+  bb = [ii for ii in netease_rename.detect_netease_music_name_list(aa) if ii['title'] == '简爱']
+  bb = [ii for ii in netease_rename.detect_netease_music_name_list(aa) if ii['artist'] == '孙燕姿']
+  song_id = bb[0]['song_id']
+
+  netease_download_playlist.netease_download_single_bit_rate(song_id=song_id, SIZE_ONLY=True)
+  netease_download_playlist.netease_download_single_bit_rate(song_id=30431376, dist_path='./')
+
+  aa = netease_download_playlist.netease_parse_playlist_2_list(playlist_id=101562485)
+  dd = DataFrame(netease_rename.detect_netease_music_name_list(aa))
+  print(dd.song_id.min(), dd.song_id.max())
+  # 64634 1302261203
+  
+  print(dd.artist.value_counts().head(9))
+  # 孙燕姿                 8
+  # 曹方                  7
+  # 陈奕迅                 4
+  # Garou               4
+  # 莫文蔚                 4
+  # 郑欣宜                 3
+  # 陈粒                  3
+  # 金海心                 3
+  # Rachael Yamagata    3
+  # Name: artist, dtype: int64
+  ```
   ```python
   # request [http://music.163.com/api/linux/forward] time is 5954
   # {"type":"song","id":534568536,"resolution":320,"seq":20502}
+
+  headers = {
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "en-GB,en;q=0.5",
+    "Connection": "keep-alive",
+    "Host": "api.imjad.cn",
+    "Referer": "https://api.imjad.cn/cloudmusic.md",
+    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0"
+  }
 
   headers = {
     "Host": "music.163.com",
@@ -325,19 +367,11 @@
     "Accept-Language": "en-US,en;q=0.8"
   }
 
-  headers = {
-    "Accept": "*/*",
-    "Accept-Encoding": "gzip, deflate, br",
-    "Accept-Language": "en-GB,en;q=0.5",
-    "Connection": "keep-alive",
-    "Host": "api.imjad.cn",
-    "Referer": "https://api.imjad.cn/cloudmusic.md",
-    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0"
-  }
   url_base = "http://music.163.com/api/linux/forward"
   data = {"eparams": "045913148E5D4B33D53D16D283F3C3445BCA8A188E1BE398DB4C9A3FC117E19CFD5383E018356CEB3F0AE94452892D4ED77FA1307DCE569066821F538183EC9A11BA253DED5B5D7883C32F6A60F50658C227FE4CC1F2076243736E2A36B635D0E8864A120B597EE567CEB5693CCE750C7EF54E238436BDE0CA8F376126AA1104"}
 
   resp = requests.post(url_base, data=data, headers=headers)
+  resp.json()['data']['size'] / 1024 / 1024
 
   uur = resp.json()["data"]["url"]
   resp = requests.get(uur)

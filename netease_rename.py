@@ -71,7 +71,9 @@ def detect_netease_music_name_list(song_list):
 
 
 def generate_target_file_name(dist_path, title, artist, song_format="mp3"):
-    dist_name = os.path.join(dist_path, "%s - %s" % (artist.replace("/", " "), title.replace("/", " "))) + "." + song_format
+    aa = artist.replace("/", " ").replace(":", " ").replace("?", " ").strip()
+    tt = title.replace("/", " ").replace(":", " ").replace("?", " ").strip()
+    dist_name = os.path.join(dist_path, "%s - %s" % (aa, tt)) + "." + song_format
 
     return dist_name
 
