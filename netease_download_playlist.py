@@ -60,7 +60,7 @@ def netease_parse_album_2_list(album_id):
     url_album = url_album_base.format(album_id)
 
     resp = requests.get(url_album, headers=headers)
-    for song_item in resp.json()['album']['songs']:
+    for song_item in resp.json()["album"]["songs"]:
         yield song_item["id"]
 
 
@@ -114,7 +114,7 @@ def netease_download_single_bit_rate(song_id, dist_path=None, bit_rate=320000, W
     data = encrypt.encrypted_request(params)
     resp = requests.post(song_download_url, data=data, timeout=30, headers=headers)
     resp_json = resp.json()
-    if resp_json['code'] == -460:
+    if resp_json["code"] == -460:
         print(">>>> Return with cheating, maybe it is expired time limit, try again later")
         exit(1)
 

@@ -128,4 +128,6 @@ if __name__ == "__main__":
     if args.album != None:
         netease_refresh_by_album(args.source_path, args.dist_path, args.album, args.single_download_func, args.with_size_check)
     else:
-        netease_refresh_by_playlist(args.source_path, args.dist_path, args.playlist, args.single_download_func, args.with_size_check)
+        netease_refresh_by_playlist(
+            args.source_path, args.dist_path, args.playlist, args.single_download_func, args.with_size_check
+        )

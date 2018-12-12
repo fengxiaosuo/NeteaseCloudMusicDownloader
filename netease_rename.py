@@ -46,6 +46,7 @@ import eyed3
 import shutil
 from datetime import datetime
 
+
 def detect_netease_music_name(song_id):
     headers = {"User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0"}
     url_base = "http://music.163.com/api/song/detail/?id={}&ids=[{}]"
@@ -59,8 +60,8 @@ def detect_netease_music_name(song_id):
     song_info["artist"] = rr["songs"][0]["artists"][0]["name"]
     song_info["album"] = rr["songs"][0]["album"]["name"]
     song_info["album_artist"] = rr["songs"][0]["album"]["artists"][0]["name"]
-    song_info["track_num"] = (rr['songs'][0]['no'], None)
-    song_info["year"] = str(datetime.fromtimestamp(int(rr['songs'][0]['album']['publishTime']) / 1000).year)
+    song_info["track_num"] = (rr["songs"][0]["no"], None)
+    song_info["year"] = str(datetime.fromtimestamp(int(rr["songs"][0]["album"]["publishTime"]) / 1000).year)
 
     return song_info, rr
 
@@ -133,7 +134,7 @@ def parse_arguments(argv):
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=(
-            "Rename netease-cloud-music Ubuntu client cached file\n"
+            "Rename netease-cloud-music Ubuntu client cached files\n"
             "From: source_path/<song id>-<bite rate>-<random number>.mp3\n"
             "To: dist_path/<artist name> - <song title>.mp3\n"
             "\n"
