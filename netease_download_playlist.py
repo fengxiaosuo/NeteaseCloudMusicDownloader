@@ -55,6 +55,15 @@ def netease_parse_playlist_2_list(playlist_id):
         yield song_item["id"]
 
 
+def netease_parse_album_2_list(album_id):
+    url_album_base = "http://music.163.com/api/album/{}"
+    url_album = url_album_base.format(album_id)
+
+    resp = requests.get(url_album, headers=headers)
+    for song_item in resp.json()['album']['songs']:
+        yield song_item["id"]
+
+
 def get_url_2_local_file(song_id, url, dist_path, WITH_RENAME=True, song_format="mp3"):
     song_info, _ = netease_rename.detect_netease_music_name(song_id)
     dist_name = netease_rename.generate_target_file_name(dist_path, song_info["title"], song_info["artist"], song_format)
@@ -257,6 +266,7 @@ def parse_arguments(argv):
     )
     parser.add_argument("-d", "--dist_path", type=str, help="Download output path", default=default_dist_path)
     parser.add_argument("-p", "--playlist", type=str, help="Playlist id to download", default=default_playlist_id)
+    parser.add_argument("-a", "--album", type=str, help="Album id used to download", default=None)
 
     parser.add_argument("--outer", action="store_true", help="Downloading uses netease default output url, DEFAULT one")
     parser.add_argument("--bitrate", action="store_true", help="Downloading with bitrate=320k from netease")
@@ -272,6 +282,8 @@ def parse_arguments(argv):
     args = parser.parse_args(argv)
     if args.song_id_list == None or len(args.song_id_list) == 0:
         args.song_id_list = netease_parse_playlist_2_list(args.playlist)
+    elif args.album != None:
+        args.song_id_list = netease_parse_album_2_list(args.album)
     else:
         args.song_id_list = [int(ss.replace(",", "")) for ss in args.song_id_list]
 

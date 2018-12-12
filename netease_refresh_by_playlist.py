@@ -8,14 +8,22 @@ import netease_download_playlist
 
 
 def netease_refresh_by_playlist(source_path, dist_path, playlist_id, single_download_func, WITH_SIZE_CHECK=False):
+    songlist = netease_download_playlist.netease_parse_playlist_2_list(playlist_id)
+    netease_refresh_by_songlist(source_path, dist_path, songlist, single_download_func, WITH_SIZE_CHECK)
+
+
+def netease_refresh_by_album(source_path, dist_path, album_id, single_download_func, WITH_SIZE_CHECK=False):
+    songlist = netease_download_playlist.netease_parse_album_2_list(album_id)
+    netease_refresh_by_songlist(source_path, dist_path, songlist, single_download_func, WITH_SIZE_CHECK)
+
+
+def netease_refresh_by_songlist(source_path, dist_path, songlist, single_download_func, WITH_SIZE_CHECK=False):
     if not os.path.exists(dist_path):
         os.mkdir(dist_path)
 
-    playlist = netease_download_playlist.netease_parse_playlist_2_list(playlist_id)
-
     new_downloaded = []
     song_not_found = []
-    for song_id in playlist:
+    for song_id in songlist:
         song_info, _ = netease_rename.detect_netease_music_name(song_id)
         source_path_file = netease_rename.generate_target_file_name(
             source_path, song_info["title"], song_info["artist"], song_format="mp3"
@@ -97,6 +105,7 @@ def parse_arguments(argv):
     )
     parser.add_argument("source_path", type=str, help="Source folder contains music files")
     parser.add_argument("-p", "--playlist", type=str, help="Playlist id used to download", default=default_playlist_id)
+    parser.add_argument("-a", "--album", type=str, help="Album id used to download", default=None)
     parser.add_argument("-d", "--dist_path", type=str, help="Dist output path", default=default_dist_path)
     parser.add_argument("--with_size_check", action="store_true", help="Enbale comparing source and downloaded file size")
     parser.add_argument("--outer", action="store_true", help="Downloading uses netease default output url, DEFAULT one")
@@ -116,4 +125,7 @@ def parse_arguments(argv):
 
 if __name__ == "__main__":
     args = parse_arguments(sys.argv[1:])
-    netease_refresh_by_playlist(args.source_path, args.dist_path, args.playlist, args.single_download_func, args.with_size_check)
+    if args.album != None:
+        netease_refresh_by_album(args.source_path, args.dist_path, args.album, args.single_download_func, args.with_size_check)
+    else:
+        netease_refresh_by_playlist(args.source_path, args.dist_path, args.playlist, args.single_download_func, args.with_size_check)

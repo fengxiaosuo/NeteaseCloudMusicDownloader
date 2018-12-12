@@ -44,7 +44,7 @@ import sys
 import argparse
 import eyed3
 import shutil
-
+from datetime import datetime
 
 def detect_netease_music_name(song_id):
     headers = {"User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0"}
@@ -59,6 +59,8 @@ def detect_netease_music_name(song_id):
     song_info["artist"] = rr["songs"][0]["artists"][0]["name"]
     song_info["album"] = rr["songs"][0]["album"]["name"]
     song_info["album_artist"] = rr["songs"][0]["album"]["artists"][0]["name"]
+    song_info["track_num"] = (rr['songs'][0]['no'], None)
+    song_info["year"] = str(datetime.fromtimestamp(int(rr['songs'][0]['album']['publishTime']) / 1000).year)
 
     return song_info, rr
 
@@ -88,9 +90,11 @@ def netease_cache_rename_single(song_id, file_path, dist_path, KEEP_SOURCE=True,
     tt.tag.artist = song_info["artist"]
     tt.tag.album = song_info["album"]
     tt.tag.album_artist = song_info["album_artist"]
+    tt.tag.track_num = song_info["track_num"]
+    tt.tag.recording_date = eyed3.core.Date.parse(song_info["year"])
     print(
-        "song_id = %s, tt.tag {title = %s, artist = %s, album = %s, album_artist = %s}"
-        % (song_id, tt.tag.title, tt.tag.artist, tt.tag.album, tt.tag.album_artist)
+        "song_id = %s, tt.tag {title = %s, artist = %s, album = %s, album_artist = %s, track_num = %s, year = %s}"
+        % (song_id, tt.tag.title, tt.tag.artist, tt.tag.album, tt.tag.album_artist, tt.tag.track_num, song_info["year"])
     )
 
     if SAVE_COVER_IAMGE:
