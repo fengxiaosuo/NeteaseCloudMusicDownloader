@@ -53,7 +53,10 @@ def detect_netease_music_name(song_id):
 
     url_target = url_base.format(song_id, song_id)
     resp = requests.get(url_target, headers=headers)
-    rr = json.loads(resp.text)
+    rr = resp.json()
+    if rr["code"] == -460:
+        print(">>>> Return with cheating, maybe it is expired time limit, try again later")
+        exit(1)
 
     song_info = {}
     song_info["title"] = rr["songs"][0]["name"].replace("\xa0", " ")
@@ -87,6 +90,7 @@ def netease_cache_rename_single(song_id, file_path, dist_path, KEEP_SOURCE=True,
 
     song_info, rr = detect_netease_music_name(song_id)
     tt = eyed3.load(file_path)
+    tt.initTag()
     tt.tag.title = song_info["title"]
     tt.tag.artist = song_info["artist"]
     tt.tag.album = song_info["album"]

@@ -301,13 +301,20 @@ if __name__ == "__main__":
     args = parse_arguments(sys.argv[1:])
     netease_download_list(args.song_id_list, args.dist_path, single_download_func=args.single_download_func)
 elif __name__ == "__test__":
+    import netease_rename
+    import netease_download_playlist
+
     playlist_id = "101562485"
-    ll = netease_parse_playlist_2_list(playlist_id)
-    ll = list(ll)
+    pp = netease_download_playlist.netease_parse_playlist_2_list(playlist_id)
+    ss = netease_rename.detect_netease_music_name_list(pp)
+    dd = pd.DataFrame(ss)
+    pd.value_counts(dd.artist).head(10)
+
+    ll = netease_download_playlist.netease_parse_playlist_2_list(playlist_id)
     song_not_found = []
     song_found = []
     for song_id in ll:
-        ret = netease_songid_2_baidu_single(song_id, strict_level=2)
+        ret = netease_download_playlist.netease_songid_2_baidu_single(song_id, strict_level=2)
         if ret == None:
             song_not_found.append(song_id)
         else:
