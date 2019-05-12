@@ -1,6 +1,8 @@
 # NeteaseCloudMusicDownloader
 ***
 
+- 似乎由于 api 接口改版，目前获取播放列表失败。。
+
 # 目录
   <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
