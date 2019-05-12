@@ -45,11 +45,13 @@ headers = {"User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko
 
 def netease_parse_playlist_2_list(playlist_id):
     url_playlist_base = "http://music.163.com/api/playlist/detail?id={}"
+    # url_playlist_base = "http://localhost:3000/playlist/detail?id={}"
     url_playlist = url_playlist_base.format(playlist_id)
 
     resp = requests.get(url_playlist, headers=headers)
     rr = json.loads(resp.text)
     play_list = rr["result"]["tracks"]
+    # play_list = rr["playlist"]["tracks"]
 
     for song_item in play_list:
         yield song_item["id"]

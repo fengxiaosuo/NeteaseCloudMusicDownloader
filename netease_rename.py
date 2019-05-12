@@ -45,6 +45,7 @@ import argparse
 import eyed3
 import shutil
 from datetime import datetime
+from time import sleep
 
 
 def detect_netease_music_name(song_id):
@@ -53,6 +54,13 @@ def detect_netease_music_name(song_id):
 
     url_target = url_base.format(song_id, song_id)
     resp = requests.get(url_target, headers=headers)
+    retry_count = 10
+    while resp.status_code != 200 and retry_count > 0:
+        print(">>>> resp status_code is NOT 200, here song_id = %s, retry count = %d" % (song_id, retry_count))
+        sleep(1)
+        resp = requests.get(url_target, headers=headers)
+        retry_count -= 1
+
     rr = resp.json()
     if rr["code"] == -460:
         print(">>>> Return with cheating, maybe it is expired time limit, try again later")

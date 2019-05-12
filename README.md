@@ -1,8 +1,6 @@
 # NeteaseCloudMusicDownloader
 ***
 
-- 似乎由于 api 接口改版，目前获取播放列表失败。。
-
 # 目录
   <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
@@ -330,7 +328,7 @@
   dd = DataFrame(netease_rename.detect_netease_music_name_list(aa))
   print(dd.song_id.min(), dd.song_id.max())
   # 64634 1302261203
-  
+
   print(dd.artist.value_counts().head(9))
   # 孙燕姿                 8
   # 曹方                  7

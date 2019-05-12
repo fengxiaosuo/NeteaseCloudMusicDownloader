@@ -34,7 +34,8 @@ def netease_refresh_by_songlist(source_path, dist_path, songlist, single_downloa
 
         if os.path.exists(dist_path_file):
             print("Dist file exists: %s" % (dist_path_file))
-            temp_file_path = dist_path_file
+            # temp_file_path = dist_path_file
+            continue
         elif os.path.exists(source_path_file) and WITH_SIZE_CHECK == False:
             print("Source file exists: %s" % (source_path_file))
             temp_file_path = source_path_file
